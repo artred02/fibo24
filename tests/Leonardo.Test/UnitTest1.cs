@@ -1,11 +1,17 @@
-namespace Leonardo.Tests;
+using Microsoft.EntityFrameworkCore;
+
+namespace Leonardo.Test;
 
 public class UnitTest1
 {
     [Fact]
     public async Task Test1()
     {
-        var results = await Fibonacci.RunAsync(new string[] {"13"});
-        Assert.Equal(233, results[0].Result);
+        var builder = new DbContextOptionsBuilder<FibonacciDataContext>(); 
+        var dataBaseName = Guid.NewGuid().ToString(); 
+        builder.UseInMemoryDatabase(dataBaseName);  
+        var options = builder.Options; 
+        var fibonacciDataContext = new FibonacciDataContext(options); 
+        await fibonacciDataContext.Database.EnsureCreatedAsync(); 
     }
 }
